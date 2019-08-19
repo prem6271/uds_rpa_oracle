@@ -1,8 +1,8 @@
 # importing module
 import cx_Oracle
-import xlwt
-from xlwt import Workbook
-import argparse
+import xlsxwriter
+from xlsxwriter import Workbook
+import argparse, pathlib
 from config import config
 
 cursor = ""
@@ -22,10 +22,17 @@ if args['output_type'] in ['excel', 'text']:
     if not args['output_file']:
         print("Missing output_file")
         parser.print_help()
+        quit()
+    else:
+        filename = pathlib.Path(args['output_file'])
+        if filename.exists():
+            print("File already exists " + args['output_file'])
+            quit()
 elif args['output_type'] == 'database':
     if not args['table_name']:
         print("Missing table_name")
         parser.print_help()
+        quit()
 
 # Functions
 def create_table(t_name, cursor):
@@ -64,7 +71,6 @@ def fetch_data(t_name, cur):
     query = "SELECT * FROM " + t_name
     cur.execute(query)
     result = cur.fetchall()
-
     for row in result:
         #print(row)
         dict = {
@@ -75,9 +81,60 @@ def fetch_data(t_name, cur):
             }
         }
         employee.update(dict)
-
     return employee
 
+def write_excel(f_name, data):
+    print("Writing to Excel file..")
+    row = 0
+
+    wb = Workbook(f_name)
+    sheet1 = wb.add_worksheet('Sheet 1')
+    bold = wb.add_format({'bold': True, 'bg_color': 'silver'})
+
+    # Add header
+    for x in data.keys():
+        column = 0
+        for y in data[x].keys():
+            sheet1.write(row, column, y, bold)
+            column+=1
+        break
+    row+=1
+    # Add data
+    for x in data.keys():
+        column = 0
+        for y in data[x].keys():
+            #sheet1.write(row, column, x)
+            sheet1.write(row, column, data[x][y])
+            column+=1
+            print(x, "-", y, "-", data[x][y], row, column)
+        row+=1
+    wb.close()
+
+mydict =     {
+       "empl-1": {
+            "name": "prem",
+            "age": 33,
+            "ESI": 120,
+            "PF": 500
+            },
+
+       "empl-2": {
+            "name": "ram",
+            "age": 33,
+            "ESI": 100,
+            "PF": 450
+            },
+
+       "empl-3": {
+            "name": "kumar",
+            "age": 33,
+            "ESI": 110,
+            "PF": 400
+            }
+    }
+write_excel(args['output_file'], mydict)
+
+"""
 try:
     user, password, host, port, database = [config[k] for k in ('user', 'password','host', 'port', 'database')]
     dsn_tns = cx_Oracle.makedsn(host, port, service_name=database)
@@ -101,6 +158,9 @@ try:
         for y in fetched[x].keys():
             print(x, "-", y, "-", fetched[x][y])
 
+    # Write data to Excel
+    write_excel(args['output_file'], fetched)
+
 except cx_Oracle.DatabaseError as e:
     print("There is a problem with Oracle", e)
 
@@ -111,3 +171,4 @@ finally:
         cursor.close()
     if con:
         con.close()
+"""
