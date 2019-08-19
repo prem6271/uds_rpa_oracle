@@ -29,7 +29,7 @@ elif args['output_type'] == 'database':
 
 # Functions
 def create_table(t_name, cursor):
-    print("Create table Called.." + t_name)
+    print("Creating table = " + t_name)
     query = 'CREATE TABLE ' + t_name + ' \
     (id NUMBER, \
     name VARCHAR2(20), \
@@ -60,7 +60,7 @@ def write_table(t_name, cursor, data):
     con.commit()
 
 def fetch_data(t_name, cur):
-    print("Fetching Rows " + t_name)
+    print("Fetching Rows from " + t_name)
     query = "SELECT * FROM " + t_name
     cur.execute(query)
     result = cur.fetchall()
