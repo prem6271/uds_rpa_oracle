@@ -79,14 +79,9 @@ def fetch_data(t_name, cur):
     return employee
 
 try:
-    #con = cx_Oracle.connect("user/password@server/ServiceName")
     user, password, host, port, database = [config[k] for k in ('user', 'password','host', 'port', 'database')]
     dsn_tns = cx_Oracle.makedsn(host, port, service_name=database)
     con = cx_Oracle.connect(user=user, password=password, dsn=dsn_tns)
-
-    #con = cx_Oracle.connect(user/password@host:port/database)
-
-    #con = cx_Oracle.connect('admin/admin1234@mydbinstance.ctnch1lu7rxo.us-east-1.rds.amazonaws.com:1521/orcl')
     cursor = con.cursor()
 
     # Drop table
@@ -116,96 +111,3 @@ finally:
         cursor.close()
     if con:
         con.close()
-
-"""
-mydict =     {
-       "empl-1": {
-            "name": "prem",
-            "age": 33,
-            "ESI": 120,
-            "PF": 500
-            },
-
-       "empl-2": {
-            "name": "ram",
-            "age": 33,
-            "ESI": 100,
-            "PF": 450
-            },
-
-       "empl-3": {
-            "name": "kumar",
-            "age": 33,
-            "ESI": 110,
-            "PF": 400
-            }
-    }
-
-#for x in mydict:
-#   val = mydict[x]
-#   print(x, val)
-
-
-#for x in mydict.keys():
-#    for y in mydict[x].keys():
-#       print(x, "-", y)
-
-#for x in mydict.keys():
-#    for y in mydict[x].keys():
-#           print(x, "-", y, "-", mydict[x][y])
-
-
-if 'empl-4' not in mydict.keys():
-    mydict['empl-4'] =  {
-            "name": "rames",
-            "age": 33,
-            "ESI": 110,
-            "PF": 490
-            }
-
-
-for key, val in mydict.items():
-    for y in val.keys():
-        print("Key", key, y, mydict[key][y])
-
-"""
-
-"""
-
-
-# Program to show various ways to read and
-# write data in a file.
-file1 = open("myfile.txt","w")
-L = ["This is Delhi \n","This is Paris \n","This is London \n"]
-
-# \n is placed to indicate EOL (End of Line)
-file1.write("Hello \n")
-for x in L:
-    file1.writelines(x)
-file1.close() #to change file access modes
-"""
-
-
-
-
-
-"""
-
-# xlwt is for writing; xlrd is for reading both are for old excel versions
-
-# Workbook is created
-wb = Workbook()
-
-# add_sheet is used to create sheet.
-sheet1 = wb.add_sheet('Sheet 1')
-
-# row, column
-sheet1.write(1, 0, 'prem')
-sheet1.write(2, 0, 'kumar')
-
-sheet1.write(0, 1, 'ISBT DEHRADUN')
-sheet1.write(0, 2, 'SHASTRADHARA')
-
-wb.save('xlwt example.xls')
-
-"""
